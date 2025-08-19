@@ -2,6 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <!-- Zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Import Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -17,9 +19,12 @@
 
     <!--Navigation Bar-->
     <nav class="nav">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+      <div class="nav-links" id="nav-links">
       <a href="#about-me">About Me</a>
       <a href="#hobbies">Hobbies</a>
       <a href="#contact">Contact</a>
+      </div>
      </nav> 
      <!--Main Content Container-->
     <div class="container" id="about-me">
@@ -102,6 +107,20 @@
         formMessage.style.color = 'green';
         formMessage.textContent = 'YourMessage has been sent!';
         document.getElementById('contact-form').reset();
+      });
+    </script>
+    <script>
+      const menubutton = document.querySelector('.nav-toggle');
+      const navlinks = document.getElementById('nav-links');
+      menubutton.addEventListener('click', () => {
+        const isOpen = navlinks.classList.toggle('open');
+        menubutton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      navlinks.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+          navlinks.classList.remove('open');
+          menubutton.setAttribute('aria-expanded', 'false');
+        }
       });
     </script>
   </body>
