@@ -87,6 +87,7 @@ input:invalid, textarea:invalid {
 }
 /*Buttons*/
 .btn {
+  display: inline-block;
   background-color: #4d4d33;
   color: #fff;
   padding: 10px 16px;
@@ -94,8 +95,28 @@ input:invalid, textarea:invalid {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  margin-right: 8px;
+  text-decoration: none;
 }
 .btn:hover { background-color: #66664d;}
+.btn.secondary {background-color: #2a5d84;}
+.btn.secondary:hover {background-color: #1f4663;}
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+.project-card{
+  background: rgba(255,255,255,0.8);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px rgba(0,0,0,.08);
+}
+.projhect-card h3 {margin: 0 0 8px;}
+@media (max-width: 700px) {
+  .projects-grid {grid-template-columns: 1fr;;}
+}
 button {
   background-color: #a8a895;
   color: white;
@@ -252,3 +273,4 @@ html {scroll-behavior: smooth;}
 @media (max-width: 480px) {
   button, .btn {width: 100%;}
 }
+.form-msg { font-weight: 600; margin-top: 8px;}
