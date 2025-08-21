@@ -14,7 +14,10 @@ It showcases my learning progress in web development and includes features like 
 - 1. Clone the repository  
    `git clone https://github.com/kullanici-adi/proje-adi.git`
 2. Open `index.html` in your browser
-## Future Imorovements
+## Future Improvements
 -Add contact form 
 -Add more animations
 -Multi-Language support
+to do list app+Calculator+Image Slider(JS)
+UI Improvement
+SEO
