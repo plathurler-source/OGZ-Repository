@@ -22,7 +22,7 @@
     <nav class="nav">
       <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
       <div class="nav-links" id="nav-links">
-      <a href="index.html">About Me</a>
+      <a href="index.html" class="active">About Me</a> 
       <a href="#hobbies">Hobbies</a>
       <a href="contact.html">Contact</a>
       <a href="projects.html">Projects</a>
@@ -32,10 +32,10 @@
       <h1>Projects</h1>
       <div class="projects-grid">
         <article class="project-card">
-          <h3>wather App</h3>
+          <h3>Weather App</h3>
           <p> Fetches weather data from an API and shows it with icons.</p>
-          <a class="btn" href="https://github.com/plathurler-source/OGZ-Repository" target="_blank">GitHub"</a>
-          <a class="btn secondary" href="https://warm-kleicha-cb1760.netlify.app/" target="_blank">Netlify"</a>
+          <a class="btn" href="https://github.com/plathurler-source/OGZ-Repository" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="btn secondary" href="https://warm-kleicha-cb1760.netlify.app/" target="_blank" rel="noopener noreferrer">Netlify</a>
         </article>
       </div>
      </div>
@@ -129,6 +129,9 @@
         const isOpen = navlinks.classList.toggle('open');
         menubutton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       });
+
+      <!--Close the Menu when link is clicked mobile-->
+      
       navlinks.addEventListener('click', (e) => {
         if (e.target.tagName === 'A') {
           navlinks.classList.remove('open');

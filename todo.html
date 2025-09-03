@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do - Oguz</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .todo{ max-width: 700px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 8px;}
+        .todo form { display: flex; gap: 8px; }
+        .todo input[type="text"] {flex: 1; padding: 10px; border: 1px solid #bbb; border-radius: 8px;}
+        .todo button {padding: 10px 14px; border: none; border-radius: 8px; background: #4caf50; color: #fff; cursor: pointer;}
+        .todo-list {margin-top: 16px; list-style: none; padding: 0;}
+        .todo-item {display: flex; align-items: center; gap: 10px; background: #f3f5e6; padding: 10px; border-radius: 8px; margin-bottom: 8px;}
+        .todo-item.completed .text { text-decoration: line-through; opacity: .6;}
+        .todo-item .remove {margin-left: auto; background: #b44949;}
+        .todo-empty {color: #666; font-style: italic;}
+    </style>
+</head>
+<body>
+      <nav class="nav">
+      <a href="about.html">About Me</a> 
+      <a href="contact.html">Contact</a>
+      <a href="projects.html" class="active">Projects</a>
+    </nav>
+    <div class="todo">
+        <h1>To-Do List</h1>
+        <form id="todo-form">
+            <input id="todo-input" type="text" placeholder="Add a new task..." required/>
+            <button type="submit">Add</button>
+        </form>
+        <ul id="todo-list" class="todo-list"></ul>
+        <p id="todo-empty" class="todo-empty">No tasks yet.</p>
+    </div>
+     <script>
+        const form = document.getElementById('todo-form');
+        const input = document.getElementById('todo-input');
+        const list = document.getElementById('todo-list');
+        const empty = document.getElementById('todo-empty');
+
+        const load = () => JSON.parse(localStorage.getItem('todos') || '[]');
+        const save = (items) => localStorage.setItem('todos', JSON.stringify(items));
+
+        let items = load();
+        render();
+        form.addEventListener('submit',(e) => {
+            e.preventDefault();
+            const text = input.value.trim();
+            if (!text) return;
+            items.push({id: Date.now(), text, done: false});
+            input.value = '';
+            save(items); render();
+        });
+
+        list.addEventListener('click', (e) => {
+            const li = e.target.closest('li'); if (!li) return;
+            const id = Number(li.dataset.id);
+            if(e.target.classList.contains('remove')) {
+                items = items.filter(t => t.id !==id);
+            } else {
+                items = items.map(t => t.id === id ? ({ ...t, done: !t.done }) : t);
+            }
+            save(items); render();
+        });
+        function render() {
+            list.innerHTML = items.map(t =>`
+            <li class="todo-item ${t.done ? 'completed' : ''}" data-id="${t.id}">
+                <input type="checkbox" ${t.done ? 'checked' : ''}/>
+                <span class="text">${escapeHtml(t.text)}</span>
+                <button class="remove">Delete</button>
+            </li>
+            `).join('');
+            empty.style.display = items.length ? 'none' : 'block';
+        }
+        function escapeHtml(s) {
+            const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}
+            return s.replace(/[&<>"']/g, m => map[m]);
+        }
+     </script>
+</body>
+</html>

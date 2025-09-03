@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator - Oguz</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .calc{max-width: 340px; margin: 40px auto; background-color:#fff; padding: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, .08);}
+        .display{ height: 64px; background: #20201b; color:#fff; border-radius: 8px; display: flex; align-items: end; justify-content: flex-end; padding: 10px; font-size: 32px; overflow: hidden;}
+        .grid{ margin-top: 12px; display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;}
+        .btn{padding: 16px; border: none; border-radius: 8px;background: #e9e9e0; font-size: 18px; cursor: pointer;}
+        .op{background: #cfd8dc;}
+        .eq{background: #4caf50; color: #fff;}
+        .danger{background: #b44949; color: #fff;}
+        .span-2{grid-column: span 2;}
+        .btn:active{transform: translateY(1px);}
+        @media (max-width: 420px){.calc{margin: 20px auto;} .display{font-size: 28px;height: 56px;} .btn{padding:14px;}}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+      <a href="about.html">About</a> 
+      <a href="projects.html" class="active">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    
+    <div class="calc" aria-label="Calculator">
+        <div id="display" class="display" aria-live="polite">0</div>
+        <div class="grid">
+            <button class="btn danger" data-act="clear">AC</button>
+            <button class="btn danger" data-act="del">DEL</button>
+            <button class="btn op" data-op="%">%</button>
+            <button class="btn op" data-op="/">÷</button>
+            <button class="btn op" data-op="-">-</button>
+            <button class="btn" data-op="+">+</button>
+            <button class="btn" data-dot=".">.</button>
+            <button class="btn eq" data-eq="=">=</button>
+            <button class="btn op" data-op="*">*</button>
+
+            <button class="btn span-2" data-num="0">0</button>
+            <button class="btn" data-num="1">1</button>
+            <button class="btn" data-num="2">2</button>
+            <button class="btn" data-num="3">3</button>
+            <button class="btn" data-num="4">4</button>
+            <button class="btn" data-num="5">5</button>
+            <button class="btn" data-num="6">6</button>
+            <button class="btn" data-num="7">7</button>
+            <button class="btn" data-num="8">8</button>
+            <button class="btn" data-num="9">9</button>
+        </div>
+    </div>
+    <script>
+        const d = document.getElementById('display');
+        let a = null, op = null, cur = '0', justEq = false;
+
+        const update = () => d.textContent = cur;
+        const inputNum = (number) => {
+            if (justEq) {cur='0'; justEq=false;}
+            if (cur==='0') cur=number;
+            else cur+= number;
+            update();
+        };
+        const inputDot = () => {
+            if (justEq) {cur='0'; justEq=false;}
+            if (!cur.includes('.')) cur += '.';
+            update();
+        };
+        const setOp = (o) => {
+            if (op && a !== null) compute();
+            else a = Number(cur);
+            op=o; cur='0'; update();
+        };
+        const clearAll = () => {a=null; op=null; cur= '0';update(); };
+        const delOne = () => {if (justEq) return; cur=cur.length> 1 ? cur.slice(0, -1): '0'; update(); };
+        const compute = () => {
+            const b = Number(cur);
+            if (op ==='+') a=a+b;
+            else if (op === '-') a=a-b;
+            else if (op === '*') a=a*b;
+            else if (op === '/') a=b=== 0 ? NaN : a/b;
+            else if (op === '%') a=a%b;
+            cur=String(a);
+            op=null; justEq=true; update();
+        };
+        document.querySelector('.grid').addEventListener('click', (e) => {
+            const t = e.target.closest('.btn');
+            if (!t) return;
+            if (!t.classList.contains('btn')) return;
+            if (t.dataset.num !== undefined) return inputNum(t.dataset.num);
+            if (t.dataset.dot !== undefined) return inputDot();
+            if (t.dataset.op !== undefined) return setOp(t.dataset.op);
+            if (t.dataset.eq !== undefined) return compute();
+            if (t.dataset.act === 'clear') return clearAll();
+            if (t.dataset.act ==='del') return delOne();
+        });
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '0' && e.key <= '9') inputNum(e.key);
+            else if (e.key === '.') inputDot ();
+            else if ('+-*/%'.includes(e.key)) setOp(e.key);
+            else if (e.key === 'Enter' || e.key ==='=') compute();
+            else if (e.key === 'Backspace') delOne ();
+            else if (e.key.toLowerCase() === 'c') clearAll();
+        });
+        update();
+    </script>
+</body>
+</html>

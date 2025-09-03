@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Me</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="nav">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+      <div class="nav-links" id="nav-links">
+      <a href="about.html">About Me</a> 
+      <a href="contact.html" class="active">Contact</a>
+      <a href="projects.html">Projects</a>
+      </div>
+     </nav> 
+     <div class="container">
+        <h2>Contact Me</h2>
+     <form id="contact-form" action="#" method="post" novalidate>
+      <!--Name Field-->
+      <div class="form-field">
+      <label for="name">Name <span aria-hidden="true">*</span></label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required autocomplete="name">
+      </div>
+      <!--Email Fieldd-->
+      <div class="form-field">
+        <label for="email">Email <span aria-hidden="true">*</span></label>
+        <input type="email" id="email" name="email" placeholder="Your@gmail.com" required autocomplete="email" />
+      </div>
+      <!--Message Field-->
+      <div class="form-field">
+        <label for="message">Message <span aria-hidden="true">*</span></label>
+        <textarea id="message" name="message" rows="4" placeholder="Your message here" required></textarea>
+      </div>
+      <!--Submit Button-->
+      <button type="submit" class="btn">Send</button>
+     </form>
+     <p id="form-message" aria-live="polite"></p>
+     </div>
+      <script>
+      const menubutton = document.querySelector('.nav-toggle');
+      const navlinks = document.getElementById('nav-links');
+      menubutton.addEventListener('click', () => {
+        const isOpen = navlinks.classList.toggle('open');
+        menubutton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      //Close the Menu when link is clicked mobile
+      navlinks.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+          navlinks.classList.remove('open');
+          menubutton.setAttribute('aria-expanded', 'false');
+        }
+      });
+    </script>
+    <!--JavaScript for BacktoTop-->
+        <button id="back-to-top" title="back-to-top">🔼</button>
+    <script>
+      const backtotop = document.getElementById('back-to-top');
+      window.addEventListener('scroll', () => {
+        backtotop.style.display = window.scrollY > 200 ? 'block' : 'none';
+      });
+      backtotop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth'}));
+    </script>
+    <script>
+      document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const formMessage = document.getElementById('form-message');
+        if (!name || !email || !message) {
+          formMessage.style.color = 'red';
+          formMessage.textContent = 'Please fill in all fields.';
+          return;
+        }
+        if (!email.includes('@')) {
+          formMessage.style.color = 'red';
+          formMessage.textContent = 'Please enter a valid email address.'; return;
+        }
+        formMessage.style.color = 'green';
+        formMessage.textContent = 'YourMessage has been sent!';
+        document.getElementById('contact-form').reset();
+      });
+    </script>
+</body>
+</html>

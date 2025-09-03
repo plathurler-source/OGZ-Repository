@@ -274,3 +274,8 @@ html {scroll-behavior: smooth;}
   button, .btn {width: 100%;}
 }
 .form-msg { font-weight: 600; margin-top: 8px;}
+
+.todo li::before {
+  content: none; 
+  background: none;
+}
