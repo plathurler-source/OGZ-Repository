@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .slider {max-width: 640px; margin: 40px auto; position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.1);}
+        .slides {display: flex; transition: transform 0.5s ease;}
+        .slides img {width: 100%; flex: 0 0 100%; display: block; border-radius: 12px;}
+        .nav-btn {position: absolute; top: 50%; transform: translateY(-50); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 10px; cursor: pointer; border-radius: 50%;}
+        .prev {left: 10px;}
+        .next {right: 10px;}
+        .dots {display: flex; justify-content: center; margin-top: 12px; gap: 8px;}
+        .dot {width: 12px; height: 12px; border-radius: 50%; background: #bbb; cursor: pointer;}
+        .dot.active {background: #6e8791;}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html">About</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+<div class="slider">
+    <div class="slides" id="slides">
+        <img src="./images/berserk.gif" alt="slide 1">
+        <img src="./images/Black Hole.gif" alt="slide 2">
+        <img src="./images/giphy.gif" alt="slide 3">
+    </div>
+    <button class="nav-btn prev" id="prev">◀</button>
+    <button class="nav-btn next" id="next">▶</button>
+</div>
+<div class="dots" id="dots"></div>
+    
+<script>
+    const slides = document.getElementById('slides');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const dots = document.getElementById('dots');
+    const total = slides.children.length;
+    let index = 0;
+
+    //Create the dots
+    for (let i=0;i<total;i++){
+        const dot = document.createElement('span');
+        dot.className='dot';
+        if (i===0) dot.classList.add('active');
+        dot.dataset.index=i;
+        dots.appendChild(dot);
+    }
+    const update= () => {
+        slides.style.transform = `translateX(-${index*100}%)`;
+        [...dots.children].forEach((d,i)=>d.classList.toggle('active', i===index));
+    };
+    prev.addEventListener('click',()=>{
+        index=(index-1+total)%total;
+        update();
+    });
+    next.addEventListener('click',()=>{
+        index=(index+1)%total;
+        update();
+    });
+    dots.addEventListener('click', (e)=>{
+        if (e.target.classList.contains('dot')){
+            index=Number(e.target.dataset.index);
+            update();
+        }
+    });
+    //Automatic transition
+    setInterval(()=>{
+        index=(index+1)%total;
+        update();
+    },4000);
+</script>
+</body>
+</html>

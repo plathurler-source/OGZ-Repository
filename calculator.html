@@ -55,10 +55,10 @@
         let a = null, op = null, cur = '0', justEq = false;
 
         const update = () => d.textContent = cur;
-        const inputNum = (number) => {
+        const inputNum = (numbr) => {
             if (justEq) {cur='0'; justEq=false;}
-            if (cur==='0') cur=number;
-            else cur+= number;
+            if (cur==='0') cur=numbr;
+            else cur+= numbr;
             update();
         };
         const inputDot = () => {
