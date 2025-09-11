@@ -1,0 +1,3 @@
+User-agent:*
+Allow:/
+sitemap:https://warm-kleicha-cb1760.netlify.app/sitemap.xml

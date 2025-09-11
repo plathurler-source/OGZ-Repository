@@ -3,8 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Oguz's portfolio: To-Do App, Calculator, Slider, and more.">
+    <link rel="canonical" href="https://warm-kleicha-cb1760.netlify.app/index.html">
+    <link rel="icon" href="/icons/favicon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://warm-kleicha-cb1760.netlify.app/">
+    <meta property="og:title" content="Oguz - Web Developer Portfolio">
+    <meta property="og:description" content="Mini projects, contact, and more.">
+    <meta property="og:image" content="https://warm-kleicha-cb1760.netlify.app/images/og-image.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Oguz - Web Developer Portfolio">
+    <meta name="twitter:description" content="Mini projects, contact, and more.">
+    <meta name="twitter:image" content="https://warm-kleicha-cb1760.netlify.app/images/og-image.png">
+
     <title>Oguz' Projects</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 </head>
 <body>
     <nav class="nav">
@@ -15,21 +32,59 @@
       <a href="projects.html" class="active">Projects</a>
       </div>
      </nav> 
+
      <div class="container">
       <h1>Projects</h1>
+
       <div class="projects-grid">
         <article class="project-card">
-          <h3>weather App</h3>
-          <p> Fetches Weather data from an API and shows it with icons.</p>
-          <a class="btn" href="https://github.com/plathurler-source/OGZ-Repository" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a class="btn secondary" href="https://warm-kleicha-cb1760.netlify.app/" target="_blank" rel="noopener noreferrer">Netlify</a>
-          <a class="btn" href="todo.html">To-Do</a>
-          <a class="btn" href="calculator.html">Calculator</a>
-          <a class="btn" href="slider.html">Image Slider</a>
-        </article>
-      </div>
-     </div>
-     
+          <img src="./images/sunset.jpg" alt="To-Do App thumbnail">
+          <div class="content">
+          <h3>To-Do App</h3>
+          <p>Persistent task management with LocalStorage: add/toggle/delete.</p>
+          <div class="actions">
+            <a class="btn" href="todo.html">Live</a>
+            <a class="btn secondary" href="https://github.com/plathurler-source/OGZ-Repository">Code</a>
+          </div>
+        </div>
+      </article>
 
+      <article class="project-card">
+        <img src="./images/sunset.jpg" alt="Calculator thumbnail">
+        <div class="content">
+          <h3>Calculator</h3>
+          <p>Calculator with keyboard support: four operations,percentage, AC/DEL.</p>
+          <div class="actions">
+            <a class="btn" href="calculator.html">Live</a>
+            <a class="btn secondary" href="https://github.com/plathurler-source/OGZ-Repository">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <img src="images/sunset.jpg" alt="Image Slider thumbnail">
+        <div class="content">
+          <h3> Image Slider</h3>
+          <p>Auto-play, dots, prev/next, smooth transition.</p>
+          <div class="actions">
+            <a class="btn" href="slider.html">Live</a>
+            <a class="btn secondary" href="https://github.com/plathurler-source/OGZ-Repository">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project-card">
+        <img src="images/sunset.jpg" alt="Github Finder thumbnail">
+        <div class="content">
+          <h3>Github Finder</h3>
+          <p>Searching for users with API</p>
+          <div class="actions">
+            <a class="btn" href="github.html">Live</a>
+            <a class="btn secondary" href="https://github.com/plathurler-source/OGZ-Repository">Code</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>   
 </body>
 </html>

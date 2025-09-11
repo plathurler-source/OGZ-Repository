@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github User Finder - Oguz</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .box{max-width: 720px;margin: 40px auto;background:#fff;padding: 16px;border-radius: 12px;box-shadow: 0 2px 8px rgba(0,0,0,.08);}
+        .form{display: flex;gap: 8px;}
+        .form input{flex: 1;padding: 10px;border: 1px solid #bbb;border-radius: 8px;}
+        .form button{padding: 10px 14px;border:none;border-radius: 8px;background: #4caf50;color: #fff;cursor: pointer;}
+        .result{display: grid;grid-template-columns: 120px 1fr;gap: 16px;margin-top: 16px;align-items: start;}
+        .result img{width: 120px;height: 120px;border-radius: 50%;object-fit: cover;}
+        .muted{color: #555;font-size: 14px;}
+        .error{color: #b44949;font-weight: 700;margin-top: 10px;}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html">About</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+    
+    <div class="box">
+        <h1>Github User Finder</h1>
+        <form id="form" class="form">
+            <input id="username" type="text" placeholder="Enter Github username (e.g. torvalds)" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="result" class="result" style="display: none;">
+            <img id="avatar" alt="avatar">
+            <div>
+                <h2 id="name"></h2>
+                <p id="bio" class="muted"></p>
+                <p class="muted">
+                    Followers: <span id="followers">0</span> ▪ Following: <span id="following">0</span> ▪ Repos: <span id="repos">0</span>
+                </p>
+                <a id="profile" class="btn" target="_blank" rel="noopener">View Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('form');
+        const usernameInput = document.getElementById('username');
+        const errorBox = document.getElementById('error');
+        const resultBox = document.getElementById('result');
+
+        const avatar = document.getElementById('avatar');
+        const nameEl = document.getElementById('name');
+        const bioEl = document.getElementById('bio');
+        const followersEl = document.getElementById('followers');
+        const followingEl = document.getElementById('following');
+        const reposEl = document.getElementById('repos');
+        const profileLink = document.getElementById('profile');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            if (!username) return;
+
+            //UI reset
+            errorBox.style.display = 'none';
+            resultBox.style.display = 'none';
+
+            try{
+                const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`);
+                if (!res.ok) {// 404 vs.
+                    throw new Error(`User not found (${res.status})`);
+                }
+                const data=await res.json();
+
+                //doldur
+                avatar.src=data.avatar_url;
+                nameEl.textContent=data.name || data.login;
+                bioEl.textContent=data.bio || 'No bio';
+                followersEl.textContent=data.followers;
+                followingEl.textContent=data.following;
+                reposEl.textContent=data.public_repos;
+                profileLink.href=data.html_url;
+                
+                resultBox.style.display='grid';}
+                catch (err) {
+                    errorBox.textContent=err.message || 'Something went wrong';
+                    errorBox.style.display='block';
+                }
+        });
+    </script>
+</body>
+</html>
