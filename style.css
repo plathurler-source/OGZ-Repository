@@ -1,11 +1,32 @@
+:root{
+  --bg:#f52cf;
+  --surface:rgba(255,255,255,.7);
+  --text:#20201b;
+  --primary:#4caf50;
+  --primary-strong:#45a049;
+  --accent:#2a5d84;
+  --accent-strong:#1f4663;
+  --card:#ffffff;
+  --muted:#444;
+}
+
 /*Global Styles*/
-body {
-  background-color: hsl(56, 52%, 93%);
-  font-family: "Roboto", Arial, sans-serif;
+body {background-color:var(--bg); color: var(--text);
+ font-family: "Roboto", Arial, sans-serif;
   font-size: 18px;
   margin: 0;
-  color: #20201b;
-}
+  color: #20201b;}
+
+.container{background: var(--surface);}
+.btn{ background: var(--primary);}
+.btn:hover{background: var(--primary-strong);}
+.btn.secondary{background: var(--accent);}
+.project-card{background: var(--card);}
+.project-card p{color:var(--muted);}
+.nav{background: #2f3d2e;}
+ul{background-color: #b5c0a3;}
+
+ 
 /*Dark mode Styles*/
 body.dark-mode {
   background-color: #121212;
@@ -26,6 +47,19 @@ body.dark-mode textarea {
 body.dark-mode button {
   background-color: #888;
 }
+
+body[data-theme"dark"]{
+  --bg:#121212;
+  --surface:rgba(30,30,30,.9);
+  --text:#f2f2f2;
+  --card:#1e1e1e;
+  --muted:#b9b9b9;
+  --primary:#6ccf78;
+  --primary-strong:#56bd64;
+  --accent:#4b8bbd;
+  --accent-strong:#3a6f96; 
+}
+
 /*Profile image*/
 .profile-pic {
   border-radius:50%;
