@@ -12,4 +12,7 @@ console.log(evens);
 const nums4=[5,10,15];
 const total=nums4.reduce((acc, curr) => acc + curr, 0);
 console.log(total);
-3.9
+
+const names = ["Jack","Oguzhan","David"];
+const upper = names.map(n => n.toUpperCase());
+console.log("Uppercase names" upper);
