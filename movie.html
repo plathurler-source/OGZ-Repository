@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Finder (OMDb)</title>
+    <style>
+        body{font-family: system-ui, Arial, sans-serif; margin:0; background: #f7f7f7; color:#222;}
+        .box{max-width: 900px; margin:32px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.08); padding: 16px;}
+        .row{display: flex; gap: 8px; flex-wrap: wrap;}
+        .row input, .row select{padding: 10px; border: 1px solid #bbb; border-radius: 8px; background: #fafafa; cursor: pointer; }
+        .row input[type="text"] {flex: 1;}
+        .row button { padding: 10px 12px; border: 1px solid #bbb; border-radius: 8px; background: #fafafa; cursor: pointer; }
+        #error { color: #b44949; font-weight: 700; margin-top: 10px; display: none; }
+        #empty { color: #666; font-style: italic; margin-top: 10px; display: none; }
+        #results { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+        .card { border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff; display: grid; grid-template-rows: 270px 1fr;}
+        .poster{width: 100%; height: 100%; object-fit: cover;}
+        .content{padding: 10px;}
+        .title{margin: 0 0 6px; font-size: 16px;}
+        .muted{color: #666; font-size: 14px; margin: 0;}
+        .pager{margin-top: 14px; display: flex; gap: 8px; align-items: center;}
+        .pager button{margin-top: 8px 10px; border: 1px solid #bbb; border-radius: 8px; background: #fafafa; cursor: pointer;}
+        .details{margin-top: 8px; font-size: 14px; color: #333;}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Movie Finder (OMDb)</h1>
+        <div class="row">
+            <input id="apikey" type="text" placeholder="OMDb API Key (required)">
+            <input id="q" type="text" placeholder="Search title, e.g. intersteller">
+            <select id="type">
+                <option value="">All types</option>
+                <option value="movie">Movie</option>
+                <option value="series">Series</option>
+                <option value="episode">Episode</option>
+            </select>
+            <input id="year" type="number" placeholder="Year (e.g. 2014)" min="1900" max="2100" step="1">
+            <button id="search">Search</button>
+        </div>
+        <div id="error"></div>
+        <div id="empty">No results.</div>
+        <div id="results"></div>
+
+        <div class="pager">
+            <button id="prev">◀ Prev</button>
+            <span id="pageinfo">Page 1/1</span>
+            <button id="next">Next ▶</button>
+        </div>
+    </div>
+
+    <script>
+        const apikey = document.getElementById('apikey');
+        const q = document.getElementById('q');
+        const typeSel = document.getElementById('type');
+        const year = document.getElementById('year');
+        const searchBtn = document.getElementById('search');
+        const errorBox = document.getElementById('error');
+        const emptyBox = document.getElementById('empty');
+        const results = document.getElementById('results');
+        const prev = document.getElementById('prev');
+        const next = document.getElementById('next');
+        const pageinfo = document.getElementById('pageinfo');
+
+        let page = 1, totalPAges = 1, lastQuery = {};
+
+        function buildUrl({key,s,type,y,page}) {
+            const u = new URL('https://www.omdbapi.com/');
+            u.searchParams.set('apikey', key);
+            u.searchParams.set('s', s);
+            if (type) u.searchParams.set('type', type);
+            if (y) u.searchParams.set('y',y);
+            u.searchParams.set('page',String(page));
+            return u.toString();
+        }
+
+        async function searchMovies() {
+            errorBox.style.display = 'none';
+            emptyBox.style.display = 'none';
+            results.innerHTML = '';
+
+            const key = apikey.value.trim();
+            const s = q.value.trim();
+            const type = typeSel.value;
+            const y = year.value.trim();
+
+            if (!key) {errorBox.textContent = 'API key is required.'; errorBox.style.display = 'block'; return;}
+            if (!s) {errorBox.textContent = 'Please enter a search term.'; errorBox.style.display = 'block'; return;}
+
+            lastQuery = {key, s, type, y, page};
+            const url = buildUrl({key,s,type,y,page});
+            
+            try{
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (data.Response === 'False') {emptyBox.textContent = data.Error || 'No resultes.'; emptyBox.style.display = 'block';totalPages = 1; updatePager(); return;}
+                
+                const total = Number(data.totalResults || 0);
+                totalPages = Math.max(1, Math.ceil(total / 10));
+                renderList(data.Search || []);
+                updatePager();
+            } catch (err) {
+                errorBox.textContent = err.message || 'Something went wong';
+                errorBox.style.display = 'block';
+            }
+        }
+
+        function renderList(list) {
+            results.innerHTML = list.map(x => {
+                const poster = (x.Poster && x.Poster !== 'N/A') ? x.Poster : 'https://via.placeholder.com/300x450?text=No+Poster';
+                const title = x.Title || 'Untitled';
+                const yeard = x.Year || '-';
+                const type = x.Type || '-';
+                const id = x.imdbID;
+                return `
+                  <article class="card">
+                    <img class="poster" src="${poster}" alt="Poster of ${title}">
+                    <div class="content">
+                        <h3 class="title">${escapeHtml(title)}</h3>
+                        <p class="muted">${type} • ${year}</p>
+                        <div class="details" data-id="${id}"><button data-id="${id}">Details</button></div>
+                    </div>
+                </article>
+                `;
+            }).join('');
+        }
+
+        async function fetchDetails(id, key) {
+            const u = new IRL('https://www.omdbapi.com/');
+            u.searchParams.set('apikey', key);
+            u.searchParams.set('i', id);
+            u.searchParams.set('plot', 'short');
+            const res = await fetch(u.toString());
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        }
+
+       results.addEventListener('click', async (e) => {
+        const btn =e.target.closest('button[data-id]');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        try{
+            btn.disabled = true; btn.textContent = 'Loading...';
+            const info = await fetchDetails(id, apikey.value.trim());
+            const box = btn.parentElement;
+            box.innerHTML = `
+              <div><strong>IMDB:</strong> ${escapeHtml(info.imdbRating || 'N/A')} • <strong>Runtime:</strong> ${escapeHtml(info.Runtime || 'N/A')}</div>
+              <div><strong>Genre:</stron> ${escapeHtml(info.Genre || 'N/A')}</div>
+              <div><strong>Plot:</stron> ${escapeHtml(info.Plot || 'N/A')}</div>
+            `;
+        } catch (err) {
+            btn.textContent = 'Details'; btn.disabled = false;
+            alert(err.message || 'Failed to load details');
+        }
+       });
+
+       prev.addEventListener('click',() => {if (page >1 ) {page--; searchMovies(); } });
+       next.addEventListener('click', () => {if (page < totalpages) { page++; searchMovies(); }});
+
+       searchBtn.addEventListener('click', () => {page=1; searchMovies(); });
+       q.addEventListener('keydown', (e) => {if (e.key === 'Enter') {page = 1; searchMovies(); }});
+
+       function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, m => (
+            {
+            '&':'&amp',
+            '<':'&lt;',
+            '>':'&gt',
+            '"':'&quot;',
+            "'":'&#39;'}[m]
+        ));
+        }
+    </script>
+</body>
+</html>

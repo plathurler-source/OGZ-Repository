@@ -9,10 +9,94 @@
         body{font-family: system-ui, Arial, sans-serif; margin:0; background: #f7f7f7; color:#222;}
         .box{max-width: 800px;margin: 32px auto;background: #fff;border-radius: 12px;box-shadow: 0 4px 16px rgba(0,0,0,.08);padding: 16px;}
         .row{display: flex;gap: 8px;flex-wrap: wrap;}
-        
+        .row input{flex: 1;padding: 10px;border: 1px solid #bbb;border-radius: 8px;}
+        .row button, .row select{padding: 10px 12px; border: 1px solid #bbb;border-radius: 8px;background: #fafafa;cursor: pointer;}
+        #results{margin-top: 16px;display: grid;grid-template-columns: repeat(auto-fill,minmax(240px,1fr));gap: 12px;}
+        .card{border: 1px solid #e5e5e5; border-radius: 10px;overflow: hidden;background: #fff;}
+        .flag{width: 100%;height: 140px;object-fit: cover;}
+        .content{padding: 10px;}
+        .muted{color: #666;font-size: 14px;}
+        #error{color: #b44949;font-weight: 700;margin-top: 10px;display: none;}
+        #empty{color:#666;font-style: italic;margin-top: 10px;display: none;}
     </style>
 </head>
 <body>
-    
+    <div class="box">
+        <h1>Country Finder</h1>
+        <div class="row">
+            <input id="q" type="text" placeholder="Country name (e.g Türkiye, Japan)">
+            <select id="region">
+                <option value="">All regions</option>
+                <option>Africa</option><option>Americas</option><option>Asia</option>
+                <option>Europe</option><option>Oceania</option>
+            </select>
+            <button id="search">Search</button>
+        </div>
+        <div id="error"></div>
+        <div id="empty">No results.</div>
+        <div id="results"></div>
+    </div>
+    <script>
+        const q = document.getElementById('q');
+        const region = document.getElementById('region');
+        const searchBtn = document.getElementById('search');
+        const errorBox = document.getElementById('error');
+        const emptyBox = document.getElementById('empty');
+        const results = document.getElementById('results');
+
+        async function fetchCountries(name) {
+            const base ='https://restcountries.com/v3.1';
+            const url = name ? `${base}/name/${encodeURIComponent(name)}`: `${base}/all`;
+            const res = name ? await fetch(url): await fetch(`${base}/all`);
+            if(!res.ok) throw new Error(`Request failed (${res.status})`);
+            return res.json();
+        }
+        function render(list){
+            results.innerHTML = list.map(c => {
+                const flag = c.flags?.png || c.flags?.svg || '';
+                const nm = c.name?.common || 'Unknown';
+                const reg = c.region || '-';
+                const pop = (c.population ?? 0).toLocaleString();
+                const cap = (Array.isArray(c.capital)? c.capital[0]: c.capital) || '-';
+                return `
+                <article class="card">
+                    <img class="flag" src="${flag}" alt="Flag of ${nm}">
+                    <div class="content">
+                        <h3>${nm}</h3>
+                        <p class="muted">Region: ${reg}</p>
+                        <p class="muted">Capital: ${cap}</p>
+                        <p class="muted">Population: ${pop}</p>
+                    </div>
+                </article>
+            `;  
+            }).join('');
+        }
+
+        function applyFilters(data){
+            const r = region.value;
+            return r ? data.filter(c => (c.region||'')=== r) : data;
+        }
+        async function runSearch() {
+            errorBox.style.display = 'none';
+            emptyBox.style.display = 'none';
+            results.innerHTML = '';
+            try{
+                const name = q.value.trim();
+                let data = await fetchCountries(name);
+                data = applyFilters(data);
+                if(!data.length){emptyBox.style.display = 'block';return;}
+                render(data);
+            }catch(err){
+                errorBox.textContent = err.message || 'Something went wrong';
+                errorBox.style.display = 'block';
+            }
+        }
+
+        searchBtn.addEventListener('click', runSearch);
+        q.addEventListener('keydown', e => {if(e.key === 'Enter') runSearch();});
+        region.addEventListener('change', runSearch);
+
+        runSearch();
+    </script>
 </body>
 </html>
