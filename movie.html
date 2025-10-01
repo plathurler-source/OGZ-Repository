@@ -20,7 +20,7 @@
         .title{margin: 0 0 6px; font-size: 16px;}
         .muted{color: #666; font-size: 14px; margin: 0;}
         .pager{margin-top: 14px; display: flex; gap: 8px; align-items: center;}
-        .pager button{margin-top: 8px 10px; border: 1px solid #bbb; border-radius: 8px; background: #fafafa; cursor: pointer;}
+        .pager button{margin: 8px 10px; border: 1px solid #bbb; border-radius: 8px; background: #fafafa; cursor: pointer;}
         .details{margin-top: 8px; font-size: 14px; color: #333;}
     </style>
 </head>
@@ -63,7 +63,7 @@
         const next = document.getElementById('next');
         const pageinfo = document.getElementById('pageinfo');
 
-        let page = 1, totalPAges = 1, lastQuery = {};
+        let page = 1, totalPages = 1, lastQuery = {};
 
         function buildUrl({key,s,type,y,page}) {
             const u = new URL('https://www.omdbapi.com/');
@@ -102,7 +102,7 @@
                 renderList(data.Search || []);
                 updatePager();
             } catch (err) {
-                errorBox.textContent = err.message || 'Something went wong';
+                errorBox.textContent = err.message || 'Something went wrong';
                 errorBox.style.display = 'block';
             }
         }
@@ -116,10 +116,10 @@
                 const id = x.imdbID;
                 return `
                   <article class="card">
-                    <img class="poster" src="${poster}" alt="Poster of ${title}">
+                    <img class="poster" src="${poster}" alt="Poster of ${escapeHtml(title)}">
                     <div class="content">
                         <h3 class="title">${escapeHtml(title)}</h3>
-                        <p class="muted">${type} • ${year}</p>
+                        <p class="muted">${type} • ${yeard}</p>
                         <div class="details" data-id="${id}"><button data-id="${id}">Details</button></div>
                     </div>
                 </article>
@@ -128,7 +128,7 @@
         }
 
         async function fetchDetails(id, key) {
-            const u = new IRL('https://www.omdbapi.com/');
+            const u = new URL('https://www.omdbapi.com/');
             u.searchParams.set('apikey', key);
             u.searchParams.set('i', id);
             u.searchParams.set('plot', 'short');
@@ -148,13 +148,19 @@
             box.innerHTML = `
               <div><strong>IMDB:</strong> ${escapeHtml(info.imdbRating || 'N/A')} • <strong>Runtime:</strong> ${escapeHtml(info.Runtime || 'N/A')}</div>
               <div><strong>Genre:</stron> ${escapeHtml(info.Genre || 'N/A')}</div>
-              <div><strong>Plot:</stron> ${escapeHtml(info.Plot || 'N/A')}</div>
+              <div><strong>Plot:</strong> ${escapeHtml(info.Plot || 'N/A')}</div>
             `;
         } catch (err) {
             btn.textContent = 'Details'; btn.disabled = false;
             alert(err.message || 'Failed to load details');
         }
        });
+
+       function updatePager() {
+        pageinfo.textContent = `Page ${page}/${totalPages}`;
+        prev.disabled = page <= 1;
+        next.disabled = page >= totalPages;
+       }
 
        prev.addEventListener('click',() => {if (page >1 ) {page--; searchMovies(); } });
        next.addEventListener('click', () => {if (page < totalpages) { page++; searchMovies(); }});
@@ -165,9 +171,9 @@
        function escapeHtml(s) {
             return String(s).replace(/[&<>"']/g, m => (
             {
-            '&':'&amp',
+            '&':'&amp;',
             '<':'&lt;',
-            '>':'&gt',
+            '>':'&gt;',
             '"':'&quot;',
             "'":'&#39;'}[m]
         ));
