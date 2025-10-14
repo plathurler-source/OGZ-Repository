@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather-Oguz</title>
+    <style>
+        :root{--card:#fff; --ink:#222; --muted:#666; --bd:#e6e6e6; --bg:#f7f7f7; --accent:#4caf50;}
+        *{box-sizing: border-box;}
+        body{ margin:0; font-family:system-ui, Arial, sans-serif; background:var(--bg); color:var(--ink) }
+    .box{ max-width:920px; margin:32px auto; background:var(--card); border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,.08); padding:16px }
+    .row{ display:flex; gap:8px; flex-wrap:wrap }
+    .row input,.row select{ padding:10px; border:1px solid #bbb; border-radius:8px }
+    .row input[type="text"]{ flex:1 }
+    .row button{ padding:10px 12px; border:1px solid #bbb; border-radius:8px; background:#fafafa; cursor:pointer }
+    #error{color:#b44949; font-weight: 700; margin-top: 10px; display: none;}
+    #current{margin-top: 16px; border:1px solid var(--bd); border-radius: 8px; background: 10px; padding: 12px;}
+    #current h2{margin:0 0 6px 0}
+    #current .muted{color:var(--muted); margin: 0;}
+    .grid{margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); gap: 10px;}
+    .card{border: 1px solid var(--bd); border-radius: 10px; padding: 10px; background: var(--card);}
+    .big{font-size: 32px; font-weight: 700;}
+    .tag{display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--accent); color:#fff; font-size: 12px;}
+    </style>
+    
+</head>
+<body>
+    <div class="box">
+        <h1>Weather (OpenWeather)</h1>
+        <div class="row">
+            <input id="key" type="text" placeholder="OpenWeather API Key (required)">
+            <input id="q" type="text" placeholder="City, e.g. 'Berlin'">
+            <select id="units">
+                <option value="metric" selected>Metric (°C)</option>
+                <option value="imperial">imperial (°F)</option>
+                <option value="standard">Standard (K)</option>
+            </select>
+            <button id="search">Search</button>
+        </div>
+        <div id="error"></div>
+
+        <section id="current" style="display: none">
+            <h2 id="c-city"></h2>
+            <p class="muted" id="c-desc"></p>
+            <div class="row" style="align-items: center;margin-top: 8px;">
+                <span id="c-temp" class="big">-</span>
+                <span id="c-feels" class="tag" title="Feels like">feels -</span>
+            </div>
+            <p class="muted" id="c-extra"></p>
+        </section>
+
+        <h3 style="margin-top: 18px">Forecast (5d/3h)</h3>
+        <div id="forecast" class="grid"></div>
+    </div>
+
+    <script>
+        const keyEl = document.getElementById('key');
+        const qEl = document.getElementById('q');
+        const unitsEl = document.getElementById('units');
+        const btn = document.getElementById('search');
+        const err = document.getElementById('error');
+        const current = document.getElementById('current');
+        const cCity = document.getElementById('c-city');
+        const cDesc = document.getElementById('c-desc');
+        const cTemp = document.getElementById('c-temp');
+        const cFeels = document.getElementById('c-feels');
+        const cExtra = document.getElementById('c-extra');
+        const forecast = document.getElementById('forecast');
+
+        const unitSymbol = (u) => u==='metric' ? '°C' : (u==='imperial' ? '°F' : 'K');
+
+        const apiBase = 'https://api.openweathermap.org/data/2.5';
+        function buildUrl(path, params){
+            const u = new URL(apiBase + path);
+            Object.entries(params).forEach(([k,v]) => u.searchParams.set(k,v));
+            return u.toString();
+        }
+
+        btn.addEventListener('click', () => fetchAll());
+        qEl.addEventListener('keydown', (e)=>{if(e.key==='Enter') fetchAll(); });
+
+        async function fetchAll() {
+            err.style.display='none';
+            current.style.display='none';
+            forecast.innerHTML='';
+
+            const key = keyEl.value.trim();
+            const city = qEl.value.trim();
+            const units = unitsEl.value;
+
+            if(!key){showError('API key is required.'); return;}
+            if(!city){showError('Please enter a city'); return;}
+
+            try{
+                const nowUrl = buildUrl('/weather',{q: city, units, appid: key});
+                const nowRes = await fetch(nowUrl);
+                if(!nowRes.ok) throw new Error(`Current: HTTP ${nowRes.status}`);
+                const now = await nowRes.json();
+
+                const fcUrl = buildUrl('/forecast', {q: city, units, appid: key });
+                const fcRes = await fetch(fcUrl);
+                if(!fcRes.ok) throw new Error(`Forecast: HTTP ${fcRes.status}`);
+                const fc = await fcRes.json();
+
+                renderCurrent(now, units);
+                renderForecast(fc, units);
+            }catch(e){
+                showError(e.message || 'Something went wrong.');
+            }
+        }
+
+        function showError(msg){
+            err.textContent = msg;
+            err.style.display ='block';
+        }
+
+        function renderCurrent(now, units){
+            const sym = unitSymbol(units);
+            const name = `${now.name},${now.sys?.country || ''}`.trim().replace(/,\s*$/,'');
+            const desc = now.weather?.[0]?.description || '-';
+            const temp = Math.round(now.main?.temp);
+            const feels = Math.round(now.main?.feels_like);
+            const hum = now.main?.humidity ?? '-';
+            const wind = now.wind?.speed ?? '-';
+
+            cCity.textContent = name;
+            cDesc.textContent = capitalize(desc);
+            cTemp.textContent = `${temp}${sym}`;
+            cFeels.textContent = `feels ${feels}${sym}`;
+            cExtra.textContent = `Humidity: ${hum}% • Wind: ${wind} ${units==='imperial'?'mph':'m/s'}`;
+
+            current.style.display = 'block';
+        }
+
+        function renderForecast(fc,units){
+            const sym = unitSymbol(units);
+
+            const items = (fc.list || []).slice(0,12);
+            forecast.innerHTML = items.map(x=>{
+                const dt = new Date(x.dt * 1000);
+                const hour = dt.toLocaleString(undefined, {weekday:'short',hour: '2-digit', minute: '2-digit'});
+                const t = Math.round(x.main?.temp);
+                const d = capitalize(x.weather?.[0]?.description || '-');
+                return `
+                <div class="card">
+                    <div style="font-weight:700">${hour}</div>
+                    <div class="big" style="font-size:24px">${t}${sym}</div>
+                    <div class="muted">${escapeHtml(d)}</div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(s){return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&quot;','"':'&#39;'}[m]));}
+        function capitalize(s){return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;}
+    </script>
+</body>
+</html>

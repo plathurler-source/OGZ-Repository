@@ -28,7 +28,7 @@
     <div class="box">
         <h1>Movie Finder (OMDb)</h1>
         <div class="row">
-            <input id="apikey" type="text" placeholder="OMDb API Key (required)">
+            <input id="apikey" type="text" value="7f4c7836">
             <input id="q" type="text" placeholder="Search title, e.g. intersteller">
             <select id="type">
                 <option value="">All types</option>
@@ -95,7 +95,7 @@
                 const res = await fetch(url);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                if (data.Response === 'False') {emptyBox.textContent = data.Error || 'No resultes.'; emptyBox.style.display = 'block';totalPages = 1; updatePager(); return;}
+                if (data.Response === 'False') {emptyBox.textContent = data.Error || 'No results.'; emptyBox.style.display = 'block';totalPages = 1; updatePager(); return;}
                 
                 const total = Number(data.totalResults || 0);
                 totalPages = Math.max(1, Math.ceil(total / 10));
@@ -163,7 +163,7 @@
        }
 
        prev.addEventListener('click',() => {if (page >1 ) {page--; searchMovies(); } });
-       next.addEventListener('click', () => {if (page < totalpages) { page++; searchMovies(); }});
+       next.addEventListener('click', () => {if (page < totalPages) { page++; searchMovies(); }});
 
        searchBtn.addEventListener('click', () => {page=1; searchMovies(); });
        q.addEventListener('keydown', (e) => {if (e.key === 'Enter') {page = 1; searchMovies(); }});
