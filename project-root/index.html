@@ -21,7 +21,8 @@
 
     <!-- Import Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js" defer></script>
    
     <title>This is my new account</title>
     <title>Oguz' portfolio</title>
@@ -30,12 +31,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
+    <a class="skip-link" href="main">Skip to content</a>
+
     <!-- Dark/Light Mode Toogle Button-->
-    <button id="toggle-theme">🌒 Dark Mode</button>
+    <button id="toggle-theme" aria-pressed="false" aria-label="Enable dark mode">🌒 Dark Mode</button>
 
     <!--Navigation Bar-->
     <nav class="nav">
-      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">☰ Menu</button>
       <div class="nav-links" id="nav-links">
       <a href="index.html" class="active">About Me</a> 
       <a href="#hobbies">Hobbies</a>
@@ -45,7 +48,8 @@
      </nav> 
      
      <!--Main Content Container-->
-    <div class="container" id="about-me">
+    <main id="main" class="container">
+      <section id="about-me">
       <!--Page Title-->
      <h1>I am Oguz</h1>
      <!-- Profile Picture-->
@@ -55,6 +59,7 @@
       you can check my favorite website here:
       <a href="https://www.wikipedia.org/" target="_blank">Wikipedia</a>
      </p>
+
      <!--Hobbies Section-->
      <h2 id="hobbies">Hobbies</h2>
      <ul>
@@ -83,7 +88,8 @@
       <button type="submit" class="btn">Send</button>
      </form>
      <p id="form-message" aria-live="polite"></p>
-   </div>
+     </section>
+  </main>
 
    <!--JavaScript for Dark/Light Mode Toggle-->
     <script>

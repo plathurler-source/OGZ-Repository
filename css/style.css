@@ -8,6 +8,56 @@
   --accent-strong:#1f4663;
   --card:#ffffff;
   --muted:#444;
+  --focus: 2px solid #6aa6ff;
+  --focus-offset: 3px;
+}
+
+a, button, input, textarea {
+  outline: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline: var(--focus);
+  outline-offset: var(--focus-offset);
+}
+.btn, .nav a{
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+.btn:hover, .nav a:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .10);
+}
+
+.btn:active, .nav a:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none ;
+    transition: none;
+    scroll-behavior: auto;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+}
+
+.skip-link:focus-visible {
+  left: 16px;
+  top: 12px;
+  background: #000;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
 }
 
 /*Global Styles*/
@@ -22,6 +72,10 @@ body {
 .container{background: var(--surface);}
 .btn{ background: var(--primary);}
 .btn:hover{background: var(--primary-strong);}
+.btn:focus-visable {
+  background:var(--primary-strong);
+  outline:3px solid var(--primary);
+  outline: 4px;}
 .btn.secondary{background: var(--accent);}
 .project-card{background: var(--card);}
 .project-card p{color:var(--muted);}
@@ -95,9 +149,10 @@ input, textarea {
   box-sizing: border-box;
 }
 input:focus, textarea:focus, .btn:focus {
-  outline: 3px solid #b5c0a3;
+  outline: 3px solid #ffb703;
   outline-offset: 2px;
 }
+.nav a:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px;}
 input:invalid, textarea:invalid {
   border-color: #cc5555;
 }
