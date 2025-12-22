@@ -12,26 +12,25 @@
     <meta property="og:url" content="https://warm-kleicha-cb1760.netlify.app/">
     <meta property="og:title" content="Oguz - Web Developer Portfolio">
     <meta property="og:description" content="Mini projects, contact, and more.">
-    <meta property="ogimage" content="https://warm-kleicha-cb1760.netlify.app/images/og-image.png">
+    <meta property="og:image" content="https://warm-kleicha-cb1760.netlify.app/images/og-image.png">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Oguz - Web Developer Portfolio">
     <meta name="twitter:description" content="Mini projects, contact, and more.">
-    <meta name="twitter:Image" content="https://warm-kleicha-cb1760.netlify.app/images/og-image.png">
+    <meta name="twitter:image" content="https://warm-kleicha-cb1760.netlify.app/images/og-image.png">
 
     <!-- Import Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/main.js" defer></script>
-   
-    <title>This is my new account</title>
+    <link rel="stylesheet" href="css/modal.css">
+    
     <title>Oguz' portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
-    <a class="skip-link" href="main">Skip to content</a>
+    <a class="skip-link" href="#main">Skip to content</a>
 
     <!-- Dark/Light Mode Toogle Button-->
     <button id="toggle-theme" aria-pressed="false" aria-label="Enable dark mode">🌒 Dark Mode</button>
@@ -54,6 +53,11 @@
      <h1>I am Oguz</h1>
      <!-- Profile Picture-->
      <img src="./images/avatar.gif" alt="Animated avatar" class="profile-pic">
+
+     <button type="button" class="btn" id="open-about-modal">
+      more about me
+     </button>
+
      <!-- Introduction Paragraph-->
      <p>I am learning web development. I am looking for a new business adventure. I have different ideas for the future, and to make them happen, that's why I need to learn web development. 
       you can check my favorite website here:
@@ -89,70 +93,38 @@
      </form>
      <p id="form-message" aria-live="polite"></p>
      </section>
+     <div
+      class="modal-backdrop"
+      id="about-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="about-modal-title"
+      aria-describedby="about-modal-desc"
+      hidden
+    >
+    <div class="modal">
+      <button
+      type="button"
+      class="modal-close"
+      id="close-about-modal"
+      aria-label="Close dialog"
+      >
+        *
+      </button>
+    <h2 id="about-modal-tittle">More about me></h2>
+    <p id="about-modal-desc">
+      I am learning web development to combine my creativity,gaming experience and future business ideas. This portfolio is my first step.
+    </p>
+    
+     <button type="button" class="btn modal-ok">
+       OK, got it
+     </button>
+    </div>     
+   </div>
   </main>
-
-   <!--JavaScript for Dark/Light Mode Toggle-->
-    <script>
-      const openclose = document.getElementById('toggle-theme');
-      const setTheme = (mode) =>{
-        if(mode==='dark') document.body.setAttribute('data-theme','dark');
-        else document.body.removeAttribute('data-theme');
-        openclose.textContent = mode==='dark' ? '🌞 Light Mode' : '🌙 Dark Mode';
-        localStorage.setItem('theme',mode);
-      };
-
-      setTheme(localStorage.getItem('theme') || 'light');
-      openclose.addEventListener('click', () => {
-        const next = document.body.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
-        setTheme(next);
-    }); 
-    </script>
     <!--JavaScript for BacktoTop-->
         <button id="back-to-top" title="back-to-top">🔼</button>
-    <script>
-      const backtotop = document.getElementById('back-to-top');
-      window.addEventListener('scroll', () => {
-        backtotop.style.display = window.scrollY > 200 ? 'block' : 'none';
-      });
-      backtotop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth'}));
-    </script>
-    <script>
-      document.getElementById('contact-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const message = document.getElementById('message').value.trim();
-        const formMessage = document.getElementById('form-message');
-        if (!name || !email || !message) {
-          formMessage.style.color = 'red';
-          formMessage.textContent = 'Please fill in all fields.';
-          return;
-        }
-        if (!email.includes('@')) {
-          formMessage.style.color = 'red';
-          formMessage.textContent = 'Please enter a valid email address.';
-        }
-        formMessage.style.color = 'green';
-        formMessage.textContent = 'YourMessage has been sent!';
-        document.getElementById('contact-form').reset();
-      });
-    </script>
-    <script>
-      const menubutton = document.querySelector('.nav-toggle');
-      const navlinks = document.getElementById('nav-links');
-      menubutton.addEventListener('click', () => {
-        const isOpen = navlinks.classList.toggle('open');
-        menubutton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
 
-      <!--Close the Menu when link is clicked mobile-->
-      
-      navlinks.addEventListener('click', (e) => {
-        if (e.target.tagName === 'A') {
-          navlinks.classList.remove('open');
-          menubutton.setAttribute('aria-expanded', 'false');
-        }
-      });
-    </script>
+  <script type="module" src="js/main.js"></script>
   </body>
 </html>
