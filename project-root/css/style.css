@@ -272,7 +272,7 @@ li:first-child::before {
 }
 li:nth-child(2)::before {
   content: "";
-  background-image: url("./icons/joystick.png");
+  background-image: url("../icons/joystick.png");
   background-size: 24px 24px;
   background-repeat: no-repeat;
   position: absolute;
@@ -360,3 +360,24 @@ html {scroll-behavior: smooth;}
 .dots {display: flex; justify-content: center; margin-top: 12px; gap: 8px;}
 .dot {width: 12px; height: 12px; border-radius: 50%; background: #bbb; cursor: pointer;}
 .dot.active {background: #6e8791;}
+
+.skip-link:focus-visible{
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  z-index: 9999;
+
+  background: var(--text);
+  color: var(--bg);
+}
+
+.error {
+  color: #b44949;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+
+.success {
+  color: #2f7a3e;
+  font-weight: 600;
+}

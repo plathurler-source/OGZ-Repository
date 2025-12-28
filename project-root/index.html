@@ -74,16 +74,19 @@
      <h2>Contact Me</h2>
      <form id="contact-form" action="#" method="post" novalidate>
       <!--Name Field-->
+      <p class="error" id="err-name" hidden></p>
       <div class="form-field">
       <label for="name">Name <span aria-hidden="true">*</span></label>
       <input type="text" id="name" name="name" placeholder="Enter your name" required autocomplete="name">
       </div>
       <!--Email Fieldd-->
+      <p class="error" id="err-email" hidden></p>
       <div class="form-field">
         <label for="email">Email <span aria-hidden="true">*</span></label>
         <input type="email" id="email" name="email" placeholder="Your@gmail.com" required autocomplete="email" />
       </div>
       <!--Message Field-->
+      <p class="error" id="err-message" hidden></p>
       <div class="form-field">
         <label for="message">Message <span aria-hidden="true">*</span></label>
         <textarea id="message" name="message" rows="4" placeholder="Your message here" required></textarea>

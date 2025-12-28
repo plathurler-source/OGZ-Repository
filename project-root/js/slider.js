@@ -59,17 +59,9 @@ const slides = document.getElementById('slides');
 
     autoplayBtn.addEventListener('click', ()=> {
         autoplay=!autoplay;
-        autoplayBtn.setAttribute('aria-pressed',autoplay);      
+        autoplayBtn.setAttribute('aria-pressed',String(autoplay));      
 
-        if(autoplayBtn){
-            autoplayBtn.setAttribute('aria-pressed','true');
-            autoplayBtn.textContent = 'Pause slider';
-
-        autoplayBtn.addEventListener('click',() => {
-            autoplay = !autoplay;
-            autoplayBtn.setAttribute('aria-pressed', String(autoplay))
-        })
-
+        
         if(autoplay){
             autoplayBtn.textContent = 'Pause slider';
             startAutoplay();
@@ -77,7 +69,7 @@ const slides = document.getElementById('slides');
             autoplayBtn.textContent = 'Play slider';
             stopAutoplay();
         }
-    }});
+    });
     
     document.addEventListener('keydown', (e)=> {
         if (e.key === 'ArrowRight') nextSlide();
