@@ -13,6 +13,49 @@ const openclose = document.getElementById('toggle-theme');
         setTheme(next);
     });
 
+      //Menu button
+      const menubutton = document.querySelector('.nav-toggle');
+      const navlinks = document.getElementById('nav-links');
+      menubutton.addEventListener('click', () => {
+        const isOpen = navlinks.classList.toggle('open');
+        menubutton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      //Close the Menu when link is clicked mobile
+      navlinks.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+          navlinks.classList.remove('open');
+          menubutton.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      //Contact Form Balidation & Submission
+      const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const formMessage = document.getElementById('form-message');
+
+      if (!name || !email || !message) {
+        formMessage.style.color = 'red';
+        formMessage.textContent = 'Please fill in all fields.';
+        return;
+      }
+      if (!email.includes('@')) {
+        formMessage.style.color = 'red';
+        formMessage.textContent = 'Please enter a valid email address.';
+        return;
+      }
+      formMessage.style.color = 'green';
+      formMessage.textContent = 'Your message has been sent!';
+      contactForm.reset();
+    });
+  }
+
     //JavaScript for BacktoTop
       const backtotop = document.getElementById('back-to-top');
       window.addEventListener('scroll', () => {
