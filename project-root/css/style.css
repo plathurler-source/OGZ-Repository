@@ -72,7 +72,7 @@ body {
 .container{background: var(--surface);}
 .btn{ background: var(--primary);}
 .btn:hover{background: var(--primary-strong);}
-.btn:focus-visable {
+.btn:focus-visible {
   background:var(--primary-strong);
   outline:3px solid var(--primary);
   outline: 4px;}
@@ -169,19 +169,44 @@ input:invalid, textarea:invalid {
 
 /*Card*/
 .project-card{
-  background: #fff;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 6px 14px rgba(0,0,0,.08);
   display: grid;
   grid-template-rows: auto 1fr;
   transition: transform .15s ease, box-shadow .15s ease;
+  position:relative
 }
 .project-card:hover {transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,.12);}
 .project-card img {width: 100%; height: 180px; object-fit: cover; display: block;}
 .project-card .content {padding: 14px;}
 .project-card h3 {margin: 0 0 8px;}
 .project-card p {margin: 0 0 12px; font-size: 14px; color: #444;}
+
+.card-link{
+  position: absolute;
+  inset:0;
+  z-index: 1;
+  border-radius: 14px;
+}
+
+.project-card .actions,
+.project-card .actions a{
+  position: relative;
+  z-index: 2;
+}
+
+.project-card:hover{
+  transform: translateY(-3px);
+}
+
+.project-card:focus-within{
+  outline: var(--focus);
+  outline-offset: var(--focus-offset);
+}
+.card-link:focus-visible{
+  outline: none;
+}
 
 /*Actions*/
 .actions {display: flex; gap: 10px;}
@@ -354,7 +379,7 @@ html {scroll-behavior: smooth;}
 .slider {max-width: 640px; margin: 40px auto; position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.1);}
 .slides {display: flex; transition: transform 0.5s ease;}
 .slides img {width: 100%; flex: 0 0 100%; display: block; border-radius: 12px;}
-.nav-btn {position: absolute; top: 50%; transform: translateY(-50); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 10px; cursor: pointer; border-radius: 50%;}
+.nav-btn {position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 10px; cursor: pointer; border-radius: 50%;}
 .prev {left: 10px;}
 .next {right: 10px;}
 .dots {display: flex; justify-content: center; margin-top: 12px; gap: 8px;}
