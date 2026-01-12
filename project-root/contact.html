@@ -24,12 +24,12 @@
 
 </head>
 <body>
-    <nav class="nav">
-      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+    <nav class="nav" aria-label="Primary">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">☰ Menu</button>
       <div class="nav-links" id="nav-links">
-      <a href="about.html">About Me</a> 
-      <a href="contact.html" class="active">Contact</a>
-      <a href="projects.html">Projects</a>
+      <a href="index.html">About Me</a> 
+      <a href="contact.html">Contact</a>
+      <a href="projects.html" aria-current="page">Projects</a>
       </div>
      </nav> 
      <div class="container">
@@ -53,7 +53,7 @@
       <!--Submit Button-->
       <button type="submit" class="btn">Send</button>
      </form>
-     <p id="form-message" aria-live="polite"></p>
+     <p id="form-message" aria-live="polite" role="status"></p>
      </div>
     <!--JavaScript for BacktoTop-->
         <button id="back-to-top" title="back-to-top">🔼</button>

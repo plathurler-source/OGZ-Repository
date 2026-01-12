@@ -2,6 +2,11 @@
         const openModalBtn = document.getElementById('open-about-modal');
   const modalBackdrop = document.getElementById('about-modal');
   const closeModalBtn = document.getElementById('close-about-modal');
+
+  if (!openModalBtn || !modalBackdrop || !closeModalBtn) {
+    //Exit early if the modal does not exist on this page "bu sayfada modal yok > sessizce cik"
+      return;
+  }
   let lastFocusedElement = null;
 
   const getFocusableElements = () =>

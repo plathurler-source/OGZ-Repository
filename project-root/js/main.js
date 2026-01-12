@@ -1,6 +1,7 @@
-// THEME (Dark / Light Mode) — Tema Yönetimi
-// ======================================================
-(() => {
+import './modal.js';
+import './slider.js';
+
+function initThemeToggle() {
   const btn = document.getElementById('toggle-theme');
   if (!btn) return;
 
@@ -9,48 +10,18 @@
     else document.body.removeAttribute('data-theme');
 
     btn.textContent = mode === 'dark' ? '🌞 Light Mode' : '🌙 Dark Mode';
-    btn.setAttribute('aria-pressed', String(mode === 'dark'));
     localStorage.setItem('theme', mode);
   };
 
   setTheme(localStorage.getItem('theme') || 'light');
 
   btn.addEventListener('click', () => {
-    const next =
-      document.body.getAttribute('data-theme') === 'dark'
-        ? 'light'
-        : 'dark';
+    const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     setTheme(next);
   });
-})();
+}
 
-
-// ======================================================
-// NAVBAR (Hamburger Menu) — Mobil Menü
-// ======================================================
-(() => {
-  const menuBtn = document.querySelector('.nav-toggle');
-  const navLinks = document.getElementById('nav-links');
-  if (!menuBtn || !navLinks) return;
-
-  menuBtn.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  });
-
-  navLinks.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      navLinks.classList.remove('open');
-      menuBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
-})();
-
-
-// ======================================================
-// BACK TO TOP — Yukarı Çık Butonu
-// ======================================================
-(() => {
+function initBackToTop() {
   const btt = document.getElementById('back-to-top');
   if (!btt) return;
 
@@ -58,90 +29,58 @@
     btt.style.display = window.scrollY > 200 ? 'block' : 'none';
   });
 
-  btt.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-})();
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
 
-
-// ======================================================
-// CONTACT FORM — Form Error UX (Erişilebilir)
-// ======================================================
-(() => {
+function initContactForm() {
   const form = document.getElementById('contact-form');
-  if (!form) return;
-
-  const nameEl = document.getElementById('name');
-  const emailEl = document.getElementById('email');
-  const msgEl = document.getElementById('message');
-
-  const errName = document.getElementById('err-name');
-  const errEmail = document.getElementById('err-email');
-  const errMsg = document.getElementById('err-message');
-
-  const formMessage = document.getElementById('form-message');
-
-  const setError = (el, errEl, text) => {
-    el.setAttribute('aria-invalid', 'true');
-    el.setAttribute('aria-describedby', errEl.id);
-    errEl.textContent = text;
-    errEl.hidden = false;
-  };
-
-  const clearError = (el, errEl) => {
-    el.removeAttribute('aria-invalid');
-    el.removeAttribute('aria-describedby');
-    errEl.textContent = '';
-    errEl.hidden = true;
-  };
+  const msg = document.getElementById('form-message');
+  if (!form || !msg) return;
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    formMessage.textContent = '';
-    formMessage.className = '';
+    const name = document.getElementById('name')?.value.trim();
+    const email = document.getElementById('email')?.value.trim();
+    const message = document.getElementById('message')?.value.trim();
 
-    clearError(nameEl, errName);
-    clearError(emailEl, errEmail);
-    clearError(msgEl, errMsg);
-
-    const name = nameEl.value.trim();
-    const email = emailEl.value.trim();
-    const message = msgEl.value.trim();
-
-    let firstInvalid = null;
-
-    if (!name) {
-      setError(nameEl, errName, 'Name is required.');
-      firstInvalid = firstInvalid || nameEl;
+    if (!name || !email || !message) {
+      msg.style.color = 'red';
+      msg.textContent = 'Please fill in all fields.';
+      return;
     }
-
-    if (!email) {
-      setError(emailEl, errEmail, 'Email is required.');
-      firstInvalid = firstInvalid || emailEl;
-    } else if (!email.includes('@')) {
-      setError(emailEl, errEmail, 'Please enter a valid email.');
-      firstInvalid = firstInvalid || emailEl;
-    }
-
-    if (!message) {
-      setError(msgEl, errMsg, 'Message is required.');
-      firstInvalid = firstInvalid || msgEl;
-    }
-
-    if (firstInvalid) {
-      firstInvalid.focus();
+    if (!email.includes('@')) {
+      msg.style.color = 'red';
+      msg.textContent = 'Please enter a valid email address.';
       return;
     }
 
+    msg.style.color = 'green';
+    msg.textContent = 'Your message has been sent!';
     form.reset();
-    formMessage.textContent = 'Your message has been sent!';
-    formMessage.className = 'success';
   });
-})();
+}
 
+function initMobileNav() {
+  const btn = document.querySelector('.nav-toggle');
+  const links = document.getElementById('nav-links');
+  if (!btn || !links) return;
 
-// ======================================================
-// MODAL — Açılır Pencere
-// ======================================================
-import './modal.js';
+  btn.addEventListener('click', () => {
+    const isOpen = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  links.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      links.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+// init
+initThemeToggle();
+initBackToTop();
+initContactForm();
+initMobileNav();

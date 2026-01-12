@@ -1,7 +1,13 @@
-const slides = document.getElementById('slides');
+    const slides = document.getElementById('slides');
     const prev = document.getElementById('prev');
     const next = document.getElementById('next');
     const dots = document.getElementById('dots');
+
+    if (!slides || !prev || !next || !dots) {
+            //Exit early if the modal does not exist on this page "bu sayfada modal yok > sessizce cik"
+
+        return;
+        }
     const total = slides.children.length;
     let index = 0;
 
